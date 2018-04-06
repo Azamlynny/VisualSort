@@ -1,54 +1,142 @@
-class Sorter{
-  
+class Sorter {
+
   List<Integer> toSort = new ArrayList<Integer>();
   int arraySize;
   int fps = 30;
   float columnWidthRatio;
   float columnHeightRatio;
   String sortDisp = "bar";
+  int arrayAccess;
+  int comparisons;
+  int correct; // number of correct numbers in order
+  int currentPlace = 0;
+  int solved;
+  int dataRange;
+  boolean reading = true;
+  List<Integer> countArray = new ArrayList<Integer>();
+
   
-  void randomizeArray(int size, Integer range, boolean inOrder){
+  void randomizeArray(int size, Integer range, boolean inOrder) {
     this.arraySize = size;
-    if(inOrder == true){ //inOrder means that the array has no repeating numbers and no missing numbers (1,2,3)
+    if(inOrder == true) { //inOrder means that the array has no repeating numbers and no missing numbers (1,2,3)
       int swapIndex;
       List<Integer> pickNum = new ArrayList<Integer>();
-      for(int i = 1; i <= size; i++){
+      for(int i = 1; i <= size; i++) {
         pickNum.add(i);
       }
-      for(int i = 0; i < size; i++){
-      swapIndex = ((int)random(pickNum.size()));
-      toSort.add(pickNum.get(swapIndex));
-      pickNum.remove(swapIndex);
+      for(int i = 0; i < size; i++) {
+        swapIndex = ((int)random(pickNum.size()));
+        toSort.add(pickNum.get(swapIndex));
+        pickNum.remove(swapIndex);
       }
     }
     else{
-      for(int i = 0; i < size; i++){
-        toSort.add((Integer)((int)(random(range)+.5))); 
+      for(int i = 0; i < size; i++) {
+        toSort.add((Integer)((int)(random(range-1)+1.5)));
       }
     }
-    
     this.columnWidthRatio = 2000/size;
     this.columnHeightRatio = 700/size;
+    this.solved = size;
+    this.dataRange = range;
+    for(int i = 0; i < this.arraySize; i++){
+      this.countArray.add(0); 
+    }
   }
-  
-  void changeFps(float scrollWheelVal){
-    if (scrollWheelVal == -1 && this.fps < 60){
+
+  void changeFps(float scrollWheelVal) {
+    if (scrollWheelVal == -1 && this.fps < 60) {
       this.fps++;
       frameRate(this.fps);
-    }
-    else if (scrollWheelVal == 1 && this.fps > 1){
+    } else if (scrollWheelVal == 1 && this.fps > 1) {
       this.fps--;
       frameRate(this.fps);
     }
   }
-  
+
   void drawArray(){
-    if(sortDisp == "bar"){
-      for(int i = 0; i < this.arraySize; i++){
+    if (sortDisp == "bar") {
+      for (int i = 0; i < this.arraySize; i++) {
         fill(toSort.get(i) * 255/this.arraySize, 100, 200);
-        rect(2000/arraySize * i, 1000, 2000 / arraySize, (( -toSort.get(i) * 600 / arraySize)));
+        if(i == this.currentPlace){
+          fill(50, 255, 28);
+        }
+        rect(i * this.columnWidthRatio, 1000, this.columnWidthRatio, -this.toSort.get(i) * this.columnHeightRatio);
+      }
+    }
+    else if(sortDisp == "point"){
+     for (int i = 0; i < this.arraySize; i++) {
+        fill(toSort.get(i) * 255/this.arraySize, 100, 200);
+        if(i == this.currentPlace){
+          fill(50, 255, 28);
+        }
+        rect(i * this.columnWidthRatio, 1000 - this.columnHeightRatio * this.toSort.get(i), this.columnWidthRatio, this.columnHeightRatio);
       }
     }
   }
+
+  void drawGUI(){
+    fill(255);
+    text("Framerate: " + this.fps, 1800, 25);
+  }
+
+  void drawAll(){
+    background(0);
+    this.drawArray();
+    this.drawGUI(); 
+  }
   
+  void swap(int placeX, int placeY){
+    this.toSort.set(placeX, this.toSort.get(placeX) ^ this.toSort.get(placeY));
+    this.toSort.set(placeY, this.toSort.get(placeY) ^ this.toSort.get(placeX));
+    this.toSort.set(placeX, this.toSort.get(placeX) ^ this.toSort.get(placeY));
+  }
+  
+  void reset(){
+    this.correct = 0;
+    this.currentPlace = 0;
+    
+  }
+  
+  void bubbleSort(){
+        if(this.toSort.get(this.currentPlace) > this.toSort.get(this.currentPlace+1)){
+          this.comparisons++;
+          this.swap(this.currentPlace, this.currentPlace + 1);
+          //this.toSort.set(this.currentPlace, this.toSort.get(this.currentPlace) ^ this.toSort.get(this.currentPlace+1));
+          //this.toSort.set(this.currentPlace+1, this.toSort.get(this.currentPlace+1) ^ this.toSort.get(this.currentPlace));
+          //this.toSort.set(this.currentPlace, this.toSort.get(this.currentPlace) ^ this.toSort.get(this.currentPlace+1));
+          this.correct = 1;
+        }
+        else{
+          this.comparisons++; 
+          this.correct++;
+        }
+        if(this.correct == this.arraySize){
+          System.out.println("done");
+          this.reset();
+        }
+        this.currentPlace++;
+        if(this.currentPlace >= this.arraySize-1 || this.currentPlace >= this.solved){
+          this.currentPlace = 0; 
+          this.solved--;
+          this.correct = this.arraySize - this.solved;
+        }
+  }
+
+
+  void countingSort(){
+    
+    if(this.reading == true){
+    this.countArray.set(this.toSort.get(this.currentPlace) - 1, this.countArray.get(this.toSort.get(this.currentPlace))+1);
+    this.currentPlace++;
+    }
+    if(this.currentPlace == this.arraySize && this.reading == true){
+      this.reading = false; 
+      this.currentPlace = 0;
+    }
+    if(this.reading == false){
+         this.toSort.set(this.currentPlace, this.countArray.get(this.currentPlace) + 1);
+         this.currentPlace++;
+    }
+  }
 }
