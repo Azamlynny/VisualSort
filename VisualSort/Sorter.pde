@@ -45,9 +45,7 @@ List<Integer> pickNum = new ArrayList<Integer>();
     this.columnHeightRatio = 700/size;
     this.solved = size;
     this.dataRange = range;
-    for(int i = 0; i < this.arraySize; i++){
-      this.countArray.add(0);
-    }
+    
   }
 
   void changeFps(float scrollWheelVal) {
@@ -111,6 +109,10 @@ List<Integer> pickNum = new ArrayList<Integer>();
     this.arrayAccess = 0;
     this.comparisons = 0;
     this.reading = true;
+    this.countArray.clear();
+    for(int i = 0; i < this.arraySize; i++){
+      this.countArray.add(0);
+    }
   }
   
   void bubbleSort(){

@@ -19,8 +19,12 @@ void setup(){
 }
 
 void keyPressed(){
-  if(key == ENTER){
+  if(key == ENTER && sorter.sorting == false){
     sorter.sorting = true; 
+    sorter.reset();
+  }
+  else if(key == ENTER && sorter.sorting == true){
+    sorter.sorting = false;
   }
   if(key == TAB && sorter.sortDisp == "bar"){
     sorter.sortDisp = "point"; 
@@ -44,7 +48,7 @@ void keyPressed(){
    input = ""; 
   }
   
-  if(key == ' '){
+  if(key == ' ' && sorter.sorting == false){
     if(sorter.sortStyle == "bubble"){
       sorter.sortStyle = "counting";
     }
