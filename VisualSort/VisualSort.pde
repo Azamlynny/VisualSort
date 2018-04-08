@@ -7,7 +7,7 @@ void setup(){
   frameRate(30);
   size(2000,1000);
   textSize(16);
-  sorter.randomizeArray(50, 50, false);
+  sorter.randomizeArray(10, 10, false);
   //  for(int i = 0; i < 5; i++){
   //  System.out.println(sorter.toSort.get(i));
   //}
@@ -15,7 +15,19 @@ void setup(){
 }
 
 void keyPressed(){
-
+  if(key == ENTER){
+    sorter.sorting = true; 
+  }
+  if(key == TAB && sorter.sortDisp == "bar"){
+    sorter.sortDisp = "point"; 
+  }
+  else if(key == TAB && sorter.sortDisp == "point" && sorter.arraySize <= 100){
+    sorter.sortDisp = "bar"; 
+  }
+  if(key == 'r'){ // r
+    System.out.println("r");
+    sorter.randomizeArray(10, 10, false); 
+  }
 }
 
 void mouseWheel(MouseEvent event) { // changes framerate depending on scroll wheel
@@ -23,8 +35,11 @@ void mouseWheel(MouseEvent event) { // changes framerate depending on scroll whe
 }
 
 void draw(){
-  sorter.drawAll();
-  sorter.countingSort();
+  if(sorter.sorting == true){
+  //sorter.countingSort();
   //sorter.bubbleSort();
+  sorter.insertionSort();
+  }
+  //System.out.println(keyCode);
   sorter.drawAll();
 }

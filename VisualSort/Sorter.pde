@@ -11,23 +11,28 @@ class Sorter {
   int correct; // number of correct numbers in order
   int currentPlace = 0;
   int solved;
+  int index;
+  boolean sorting = false;
   int dataRange;
   boolean reading = true;
+  int scan = 0;
   List<Integer> countArray = new ArrayList<Integer>();
-
+List<Integer> pickNum = new ArrayList<Integer>();
   
   void randomizeArray(int size, Integer range, boolean inOrder) {
+    this.reset();
+    this.toSort.clear();
     this.arraySize = size;
     if(inOrder == true) { //inOrder means that the array has no repeating numbers and no missing numbers (1,2,3)
       int swapIndex;
-      List<Integer> pickNum = new ArrayList<Integer>();
+      this.pickNum.clear();
       for(int i = 1; i <= size; i++) {
-        pickNum.add(i);
+        this.pickNum.add(i);
       }
       for(int i = 0; i < size; i++) {
         swapIndex = ((int)random(pickNum.size()));
         toSort.add(pickNum.get(swapIndex));
-        pickNum.remove(swapIndex);
+        this.pickNum.remove(swapIndex);
       }
     }
     else{
@@ -40,7 +45,7 @@ class Sorter {
     this.solved = size;
     this.dataRange = range;
     for(int i = 0; i < this.arraySize; i++){
-      this.countArray.add(0); 
+      this.countArray.add(0);
     }
   }
 
@@ -95,7 +100,8 @@ class Sorter {
   void reset(){
     this.correct = 0;
     this.currentPlace = 0;
-    
+    this.scan = 0;
+    this.index = 0;
   }
   
   void bubbleSort(){
@@ -126,17 +132,64 @@ class Sorter {
 
   void countingSort(){
     
-    if(this.reading == true){
-    this.countArray.set(this.toSort.get(this.currentPlace) - 1, this.countArray.get(this.toSort.get(this.currentPlace))+1);
-    this.currentPlace++;
+    if(this.reading == true && this.sorting == true){ //works
+      //System.out.println(this.toSort.get(this.currentPlace));
+      this.countArray.set(this.toSort.get(currentPlace) - 1, this.countArray.get(this.toSort.get(currentPlace)-1)+1);
+      this.currentPlace++;
     }
-    if(this.currentPlace == this.arraySize && this.reading == true){
+    
+    if(this.currentPlace >= this.arraySize && this.reading == true){
       this.reading = false; 
       this.currentPlace = 0;
     }
-    if(this.reading == false){
-         this.toSort.set(this.currentPlace, this.countArray.get(this.currentPlace) + 1);
-         this.currentPlace++;
+    
+    if(this.currentPlace >= this.arraySize && this.reading == false){
+      this.sorting = false;
+      this.currentPlace = 0;
+      this.scan = 0;
+      this.reset();
+    }
+     // [5, 0, 2, 3]
+    if(this.reading == false && this.sorting == true){ //<>//
+      System.out.println("t");
+      if(this.countArray.get(this.scan) != 0){
+         for(int i = 0; i < this.countArray.get(this.scan); i++){
+           this.toSort.set(this.currentPlace, this.scan + 1);
+           this.currentPlace++;
+         }
+         this.scan++;
+      }
+      else{
+        this.scan++;
+      }
+    }
+  }
+  
+  void insertionSort(){
+
+    this.index = this.correct + 1;
+    
+    if(this.index >= this.arraySize){
+      this.sorting = false;
+      this.index = 0;
+    }
+    
+    while(true){
+      if(this.index == 0){
+         break; 
+       } 
+      if(this.toSort.get(this.index - 1) > this.toSort.get(this.index)){
+         this.index--;
+       }
+       else{
+         break; 
+       }
+    }
+    if(this.sorting == true){
+      this.toSort.add(this.index, toSort.get(this.correct));
+      this.toSort.remove(this.correct + 1);
+      this.currentPlace++;
+      this.correct++;
     }
   }
 }
