@@ -6,8 +6,9 @@ class Sorter {
   float columnWidthRatio;
   float columnHeightRatio;
   String sortDisp = "bar";
-  int arrayAccess;
-  int comparisons;
+  String sortStyle = "bubble";
+  int arrayAccess = 0;
+  int comparisons = 0;
   int correct; // number of correct numbers in order
   int currentPlace = 0;
   int solved;
@@ -83,6 +84,10 @@ List<Integer> pickNum = new ArrayList<Integer>();
   void drawGUI(){
     fill(255);
     text("Framerate: " + this.fps, 1800, 25);
+    text("Average FPS: " + frameRate, 1800, 50);
+    text("Comparisons: " + this.comparisons, 25, 25);
+    text("Array Accesses: " + this.arrayAccess, 25, 50);
+    text(this.sortStyle, 1000,75);
   }
 
   void drawAll(){
@@ -95,6 +100,7 @@ List<Integer> pickNum = new ArrayList<Integer>();
     this.toSort.set(placeX, this.toSort.get(placeX) ^ this.toSort.get(placeY));
     this.toSort.set(placeY, this.toSort.get(placeY) ^ this.toSort.get(placeX));
     this.toSort.set(placeX, this.toSort.get(placeX) ^ this.toSort.get(placeY));
+    this.arrayAccess += 3;
   }
   
   void reset(){
@@ -102,6 +108,9 @@ List<Integer> pickNum = new ArrayList<Integer>();
     this.currentPlace = 0;
     this.scan = 0;
     this.index = 0;
+    this.arrayAccess = 0;
+    this.comparisons = 0;
+    this.reading = true;
   }
   
   void bubbleSort(){
@@ -117,9 +126,8 @@ List<Integer> pickNum = new ArrayList<Integer>();
           this.comparisons++; 
           this.correct++;
         }
-        if(this.correct == this.arraySize){
-          System.out.println("done");
-          this.reset();
+        if(this.correct == this.arraySize){          
+          this.sorting = false;
         }
         this.currentPlace++;
         if(this.currentPlace >= this.arraySize-1 || this.currentPlace >= this.solved){
@@ -135,6 +143,7 @@ List<Integer> pickNum = new ArrayList<Integer>();
     if(this.reading == true && this.sorting == true){ //works
       //System.out.println(this.toSort.get(this.currentPlace));
       this.countArray.set(this.toSort.get(currentPlace) - 1, this.countArray.get(this.toSort.get(currentPlace)-1)+1);
+      this.arrayAccess++;
       this.currentPlace++;
     }
     
@@ -147,14 +156,13 @@ List<Integer> pickNum = new ArrayList<Integer>();
       this.sorting = false;
       this.currentPlace = 0;
       this.scan = 0;
-      this.reset();
     }
      // [5, 0, 2, 3]
     if(this.reading == false && this.sorting == true){ //<>//
-      System.out.println("t");
       if(this.countArray.get(this.scan) != 0){
          for(int i = 0; i < this.countArray.get(this.scan); i++){
            this.toSort.set(this.currentPlace, this.scan + 1);
+           this.arrayAccess++;
            this.currentPlace++;
          }
          this.scan++;
@@ -173,23 +181,42 @@ List<Integer> pickNum = new ArrayList<Integer>();
       this.sorting = false;
       this.index = 0;
     }
-    
+    //for(int i = this.index; i > 
     while(true){
       if(this.index == 0){
          break; 
        } 
+       
       if(this.toSort.get(this.index - 1) > this.toSort.get(this.index)){
          this.index--;
        }
        else{
          break; 
        }
+       
     }
     if(this.sorting == true){
-      this.toSort.add(this.index, toSort.get(this.correct));
-      this.toSort.remove(this.correct + 1);
+      this.toSort.add(this.index, toSort.get(this.correct + 1));
+      this.toSort.remove(this.correct + 2);
       this.currentPlace++;
       this.correct++;
     }
+  }
+  
+  void bogoSort(){
+   Collections.shuffle(toSort); 
+   this.arrayAccess += this.arraySize;
+     for(int i = 0; i < this.arraySize - 1; i++){
+       if(this.toSort.get(i) <= this.toSort.get(i+1)){
+         this.correct++; 
+       }
+     }
+     if(this.correct >= this.arraySize - 1){
+       this.sorting = false; 
+       this.correct = 0;
+     }
+     else{
+      this.correct = 0; 
+     }
   }
 }
