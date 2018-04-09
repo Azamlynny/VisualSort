@@ -17,6 +17,7 @@ class Sorter {
   int dataRange;
   boolean reading = true;
   int scan = 0;
+  boolean playingSound = false;
   List<Integer> countArray = new ArrayList<Integer>();
 List<Integer> pickNum = new ArrayList<Integer>();
   
@@ -59,6 +60,9 @@ List<Integer> pickNum = new ArrayList<Integer>();
   }
 
   void drawArray(){
+    pulse.freq((int) 2000 / (this.currentPlace + 1));
+    
+
     if (sortDisp == "bar") {
       for (int i = 0; i < this.arraySize; i++) {
         fill(toSort.get(i) * 255/this.arraySize, 100, 200);
