@@ -48,7 +48,11 @@ List<Integer> pickNum = new ArrayList<Integer>();
     this.dataRange = range;
     
   }
-
+  
+  void finishSort(){
+    pulse.stop();
+    this.sorting = false;
+  }
   void changeFps(float scrollWheelVal) {
     if (scrollWheelVal == -1 && this.fps < 60) {
       this.fps++;
@@ -60,7 +64,7 @@ List<Integer> pickNum = new ArrayList<Integer>();
   }
 
   void drawArray(){
-    pulse.freq((int) 2000 / (this.currentPlace + 1));
+    pulse.freq((int) 1000 / (this.currentPlace + 1));
     
 
     if (sortDisp == "bar") {
@@ -133,7 +137,7 @@ List<Integer> pickNum = new ArrayList<Integer>();
           this.correct++;
         }
         if(this.correct == this.arraySize){          
-          this.sorting = false;
+          finishSort();
         }
         this.currentPlace++;
         if(this.currentPlace >= this.arraySize-1 || this.currentPlace >= this.solved){
@@ -159,7 +163,7 @@ List<Integer> pickNum = new ArrayList<Integer>();
     }
     
     if(this.currentPlace >= this.arraySize && this.reading == false){
-      this.sorting = false;
+      finishSort();
       this.currentPlace = 0;
       this.scan = 0;
     }
@@ -184,7 +188,7 @@ List<Integer> pickNum = new ArrayList<Integer>();
     this.index = this.correct + 1;
     
     if(this.index >= this.arraySize){
-      this.sorting = false;
+      finishSort();
       this.index = 0;
     }
     //for(int i = this.index; i > 
@@ -218,7 +222,7 @@ List<Integer> pickNum = new ArrayList<Integer>();
        }
      }
      if(this.correct >= this.arraySize - 1){
-       this.sorting = false; 
+       finishSort(); 
        this.correct = 0;
      }
      else{
