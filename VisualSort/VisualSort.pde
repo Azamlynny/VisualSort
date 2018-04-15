@@ -15,7 +15,7 @@ void setup(){
   size(2000,1000);
   textSize(16);
   noStroke();
-  sorter.randomizeArray(10, 10, false);
+  sorter.randomizeArray(10, 10, true);
   //  for(int i = 0; i < 5; i++){
   //  System.out.println(sorter.toSort.get(i));
   //}
@@ -45,8 +45,9 @@ void keyPressed(){
   }
   
   if(key == 'r'){ // 
-    sorter.randomizeArray(sortSize, sortSize, false);
+    sorter.randomizeArray(sortSize, sortSize, true);
     sorter.sorting = false;
+    pulse.stop();
   }
   
   input = input + key;
@@ -116,6 +117,9 @@ void draw(){
     else if(sorter.sortStyle == "gnome")
     {
       sorter.gnomeSort(); 
+    }
+    else if(sorter.sortStyle == "cocktail"){
+      sorter.cocktailSort(); 
     }
   }
   //System.out.println(keyCode);
