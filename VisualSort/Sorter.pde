@@ -163,6 +163,7 @@ class Sorter { //<>//
       if (this.toSort.get(currentPlace) > this.toSort.get(currentPlace + 1)) {
         this.swap(currentPlace, currentPlace + 1);
       }
+      this.comparisons++;
       currentPlace++;
       if (this.currentPlace >= this.end) {
         this.pendulating = true;
@@ -175,6 +176,7 @@ class Sorter { //<>//
         this.swap(currentPlace, this.currentPlace - 1);
       }
       currentPlace--;
+      this.comparisons++;
       if (this.currentPlace <= this.start) {
         this.start += 1;
         this.pendulating = false;
@@ -185,9 +187,15 @@ class Sorter { //<>//
       if (this.toSort.get(i) <= this.toSort.get(i + 1)) {
         this.correct++;
       }
+      else{
+       break; 
+      }
     }
     if (this.correct == this.arraySize - 1){
       this.finishSort();
+    }
+    else{
+      this.correct = 0; 
     }
     
   }
