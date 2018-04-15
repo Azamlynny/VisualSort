@@ -256,7 +256,6 @@ List<Integer> pickNum = new ArrayList<Integer>();
     
     if(this.index >= this.arraySize){
       this.finishSort();
-      this.reset();
     }
     if(this.sorting == true){
       if(this.toSort.get(this.currentPlace) < this.toSort.get(this.currentPlace - 1)){
@@ -266,6 +265,7 @@ List<Integer> pickNum = new ArrayList<Integer>();
       else{
         this.currentPlace = 0; 
       }
+      this.comparisons++;
     }
   }
   
