@@ -26,16 +26,24 @@ void keyPressed(){
   if(key == ENTER && sorter.sorting == false){
     sorter.sorting = true; 
     sorter.reset();
+    if(sorter.soundQueue == true){
+      pulse.play();
+    }
   }
   else if(key == ENTER && sorter.sorting == true){
     sorter.sorting = false;
+    pulse.stop();
   }
   if(key == TAB && sorter.sortDisp == "bar"){
     sorter.sortDisp = "point"; 
   }
   else if(key == TAB && sorter.sortDisp == "point"){
+    sorter.sortDisp = "circle"; 
+  }
+  else if(key == TAB && sorter.sortDisp == "circle"){
     sorter.sortDisp = "bar"; 
   }
+  
   if(key == 'r'){ // 
     sorter.randomizeArray(sortSize, sortSize, false);
     sorter.sorting = false;
@@ -60,18 +68,30 @@ void keyPressed(){
       sorter.sortStyle = "bogo";
     }
     else if(sorter.sortStyle == "bogo"){
-      sorter.sortStyle = "bubble";
+      sorter.sortStyle = "gnome";
+    }
+    else if(sorter.sortStyle == "gnome"){
+      sorter.sortStyle = "bubble"; 
     }
   }
   
   if(key == 's' && sorter.playingSound == false){
-    pulse.play(); 
+    
+    if(sorter.soundQueue == false && sorter.sorting == false){
+       sorter.soundQueue = true;
+    }
+    else if(sorter.sorting == true){
+     pulse.play();
+     sorter.soundQueue = true;
+    }
     sorter.playingSound = true;
+    
   }
   else if(key == 's' && sorter.playingSound == true)
   {
     pulse.stop();
     sorter.playingSound = false;
+    sorter.soundQueue = false;
   }
 }
 
@@ -92,6 +112,10 @@ void draw(){
     }
     else if(sorter.sortStyle == "bogo"){
       sorter.bogoSort(); 
+    }
+    else if(sorter.sortStyle == "gnome")
+    {
+      sorter.gnomeSort(); 
     }
   }
   //System.out.println(keyCode);

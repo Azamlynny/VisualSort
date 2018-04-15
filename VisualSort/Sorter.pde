@@ -9,9 +9,11 @@ class Sorter {
   String sortStyle = "bubble";
   int arrayAccess = 0;
   int comparisons = 0;
+  float angleRatio;
   int correct; // number of correct numbers in order
   int currentPlace = 0;
   int solved;
+  boolean soundQueue = false;
   int index;
   boolean sorting = false;
   int dataRange;
@@ -46,6 +48,7 @@ List<Integer> pickNum = new ArrayList<Integer>();
     this.columnHeightRatio = 700/size;
     this.solved = size;
     this.dataRange = range;
+    this.angleRatio = 360 / this.arraySize;
     
   }
   
@@ -53,6 +56,7 @@ List<Integer> pickNum = new ArrayList<Integer>();
     pulse.stop();
     this.sorting = false;
   }
+  
   void changeFps(float scrollWheelVal) {
     if (scrollWheelVal == -1 && this.fps < 60) {
       this.fps++;
@@ -64,7 +68,7 @@ List<Integer> pickNum = new ArrayList<Integer>();
   }
 
   void drawArray(){
-    pulse.freq((int) 1000 / (this.currentPlace + 1));
+    pulse.freq(((int) 1000 / (this.currentPlace + 1)) + 150);
     
 
     if (sortDisp == "bar") {
@@ -85,6 +89,20 @@ List<Integer> pickNum = new ArrayList<Integer>();
         rect(i * this.columnWidthRatio, 1000 - this.columnHeightRatio * this.toSort.get(i), this.columnWidthRatio, this.columnHeightRatio);
       }
     }
+    else if(sortDisp == "circle"){
+       for (int i = 0; i < this.arraySize; i++) {
+          if(i < this.arraySize / 2){
+            fill(255);
+          }
+          else if(i > this.arraySize / 2){
+            fill(0);
+          }
+          
+         arc(1000, 600, 1000, 700, radians(this.angleRatio * i), radians(this.angleRatio * i + this.angleRatio));
+       }
+       
+    }
+    
   }
 
   void drawGUI(){
@@ -229,4 +247,26 @@ List<Integer> pickNum = new ArrayList<Integer>();
       this.correct = 0; 
      }
   }
+  
+  void gnomeSort(){
+    if(this.currentPlace <= 0){
+      this.index++;
+      this.currentPlace = this.index;
+    }
+    
+    if(this.index >= this.arraySize){
+      this.finishSort();
+      this.reset();
+    }
+    if(this.sorting == true){
+      if(this.toSort.get(this.currentPlace) < this.toSort.get(this.currentPlace - 1)){
+        this.swap(this.currentPlace, this.currentPlace - 1);
+        this.currentPlace--;
+      }
+      else{
+        this.currentPlace = 0; 
+      }
+    }
+  }
+  
 }
